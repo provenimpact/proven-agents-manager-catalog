@@ -26,3 +26,4 @@ jobs:
         run: pram list --json
         env:
           PRAM_CATALOG_DIR: ${{ github.workspace }}
+          OPENCODE_CONFIG_DIR: /tmp
