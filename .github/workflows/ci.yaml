@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate catalog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pram
+        run: |
+          gh release download --repo provenimpact/proven-agents-manager --pattern 'pram-linux-amd64' --dir /tmp
+          chmod +x /tmp/pram-linux-amd64
+          sudo mv /tmp/pram-linux-amd64 /usr/local/bin/pram
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate catalog structure
+        run: pram list --json
+        env:
+          PRAM_CATALOG_DIR: ${{ github.workspace }}

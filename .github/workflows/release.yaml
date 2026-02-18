@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  validate:
+    name: Validate catalog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pram
+        run: |
+          gh release download --repo provenimpact/proven-agents-manager --pattern 'pram-linux-amd64' --dir /tmp
+          chmod +x /tmp/pram-linux-amd64
+          sudo mv /tmp/pram-linux-amd64 /usr/local/bin/pram
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate catalog structure
+        run: pram list --json
+        env:
+          PRAM_CATALOG_DIR: ${{ github.workspace }}
+
+      - name: Verify catalog version matches tag
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          CATALOG_VERSION="$(pram version --json | jq -r '.catalog.version')"
+          if [ "$TAG_VERSION" != "$CATALOG_VERSION" ]; then
+            echo "::error::Tag version ($TAG_VERSION) does not match catalog.yaml version ($CATALOG_VERSION)"
+            exit 1
+          fi
+        env:
+          PRAM_CATALOG_DIR: ${{ github.workspace }}
+
+  release:
+    name: Publish release
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create catalog archive
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ARCHIVE="pram-catalog-${VERSION}.tar.gz"
+          tar czf "${ARCHIVE}" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            -- catalog.yaml agents/ skills/ teams/
+          sha256sum "${ARCHIVE}" > checksums.txt
+          echo "ARCHIVE=${ARCHIVE}" >> "$GITHUB_ENV"
+
+      - name: Publish release
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            "${ARCHIVE}" checksums.txt \
+            --title "${{ github.ref_name }}" \
+            --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

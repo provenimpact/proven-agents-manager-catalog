@@ -1,0 +1,5 @@
+api_version: v1
+name: proven-agents
+version: 0.1.0
+min_pram_version: 0.1.0
+description: "Official ProvenImpact agent catalog for OpenCode"

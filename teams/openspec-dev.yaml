@@ -1,0 +1,8 @@
+name: openspec-dev
+description: "Spec-driven planning and development using OpenSpec (openspec.dev)."
+default: true
+agents:
+  - ada-spec-planner
+  - kai-implementer
+skills:
+  - conventional-commits

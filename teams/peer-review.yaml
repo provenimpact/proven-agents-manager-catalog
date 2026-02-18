@@ -1,0 +1,8 @@
+name: peer-review
+description: "Peer review team for code quality, security, and compliance analysis."
+default: false
+agents:
+  - riley-review-lead
+  - sam-security-analyst
+skills:
+  - conventional-commits
