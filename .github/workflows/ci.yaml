@@ -33,7 +33,16 @@ jobs:
           OPENCODE_CONFIG_DIR: ${{ github.workspace }}/.opencode
 
       - name: Validate catalog structure
-        run: pram list --json
+        run: |
+          set +e
+          pram list --json > /tmp/pram-stdout.txt 2> /tmp/pram-stderr.txt
+          rc=$?
+          echo "Exit code: $rc"
+          echo "=== STDOUT ==="
+          cat /tmp/pram-stdout.txt
+          echo "=== STDERR ==="
+          cat /tmp/pram-stderr.txt
+          exit $rc
         env:
           PRAM_CATALOG_DIR: ${{ github.workspace }}
           OPENCODE_CONFIG_DIR: ${{ github.workspace }}/.opencode
