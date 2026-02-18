@@ -13,17 +13,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install pram
-        run: |
-          gh release download --repo provenimpact/proven-agents-manager --pattern 'pram-linux-amd64' --dir /tmp
-          chmod +x /tmp/pram-linux-amd64
-          sudo mv /tmp/pram-linux-amd64 /usr/local/bin/pram
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: brew install provenimpact/tap/pram
 
       - name: Validate catalog structure
         run: pram list --json
         env:
           PRAM_CATALOG_DIR: ${{ github.workspace }}
+          OPENCODE_CONFIG_DIR: ${{ runner.temp }}/pram/opencode
 
       - name: Verify catalog version matches tag
         run: |
@@ -35,6 +31,7 @@ jobs:
           fi
         env:
           PRAM_CATALOG_DIR: ${{ github.workspace }}
+          OPENCODE_CONFIG_DIR: ${{ runner.temp }}/pram/opencode
 
   release:
     name: Publish release
