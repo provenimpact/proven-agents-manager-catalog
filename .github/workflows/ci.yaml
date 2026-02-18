@@ -10,10 +10,6 @@ jobs:
   validate:
     name: Validate catalog
     runs-on: ubuntu-latest
-    env:
-      PRAM_CATALOG_DIR: ${{ github.workspace }}
-      OPENCODE_CONFIG_DIR: ${{ runner.temp }}/pram/opencode
-      XDG_CONFIG_HOME: ${{ runner.temp }}/.config
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,6 +24,10 @@ jobs:
 
       - name: Validate catalog structure
         run: |
-          mkdir -p "$XDG_CONFIG_HOME/pram"
-          mkdir -p "$OPENCODE_CONFIG_DIR"
+          mkdir -p "${RUNNER_TEMP}/.config/pram"
+          mkdir -p "${RUNNER_TEMP}/pram/opencode"
           pram list --json
+        env:
+          PRAM_CATALOG_DIR: ${{ github.workspace }}
+          OPENCODE_CONFIG_DIR: ${{ runner.temp }}/pram/opencode
+          XDG_CONFIG_HOME: ${{ runner.temp }}/.config
