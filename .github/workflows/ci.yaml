@@ -23,7 +23,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate catalog structure
-        run: pram list --json
+        run: |
+          mkdir -p "$HOME/.config/opencode"
+          pram list --json 2>&1
         env:
           PRAM_CATALOG_DIR: ${{ github.workspace }}
-          OPENCODE_CONFIG_DIR: /tmp
+          OPENCODE_CONFIG_DIR: ${{ runner.temp }}/opencode
