@@ -12,6 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
       - name: Install pram
         run: brew install provenimpact/tap/pram
 
