@@ -22,10 +22,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Validate catalog structure
+      - name: Debug catalog
         run: |
-          pram version || true
-          pram list --json
+          echo "PRAM_CATALOG_DIR=$PRAM_CATALOG_DIR"
+          echo "OPENCODE_CONFIG_DIR=$OPENCODE_CONFIG_DIR"
+          ls -la "$PRAM_CATALOG_DIR"
+          ls -la "$PRAM_CATALOG_DIR/catalog.yaml"
+        env:
+          PRAM_CATALOG_DIR: ${{ github.workspace }}
+          OPENCODE_CONFIG_DIR: ${{ github.workspace }}/.opencode
+
+      - name: Validate catalog structure
+        run: pram list --json
         env:
           PRAM_CATALOG_DIR: ${{ github.workspace }}
           OPENCODE_CONFIG_DIR: ${{ github.workspace }}/.opencode
