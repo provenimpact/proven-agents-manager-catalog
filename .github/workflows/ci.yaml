@@ -24,8 +24,8 @@ jobs:
 
       - name: Validate catalog structure
         run: |
-          mkdir -p "$HOME/.config/opencode"
-          pram list --json 2>&1
+          pram version || true
+          pram list --json
         env:
           PRAM_CATALOG_DIR: ${{ github.workspace }}
-          OPENCODE_CONFIG_DIR: ${{ runner.temp }}/opencode
+          OPENCODE_CONFIG_DIR: ${{ github.workspace }}/.opencode
