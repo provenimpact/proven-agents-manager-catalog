@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  PRAM_CATALOG_DIR: ${{ github.workspace }}
+  OPENCODE_CONFIG_DIR: ${{ runner.temp }}/pram/opencode
+  XDG_CONFIG_HOME: ${{ runner.temp }}/.config
+
 jobs:
   validate:
     name: Validate catalog
@@ -22,27 +27,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Debug catalog
-        run: |
-          echo "PRAM_CATALOG_DIR=$PRAM_CATALOG_DIR"
-          echo "OPENCODE_CONFIG_DIR=$OPENCODE_CONFIG_DIR"
-          ls -la "$PRAM_CATALOG_DIR"
-          ls -la "$PRAM_CATALOG_DIR/catalog.yaml"
-        env:
-          PRAM_CATALOG_DIR: ${{ github.workspace }}
-          OPENCODE_CONFIG_DIR: ${{ github.workspace }}/.opencode
-
       - name: Validate catalog structure
         run: |
-          set +e
-          pram list --json > /tmp/pram-stdout.txt 2> /tmp/pram-stderr.txt
-          rc=$?
-          echo "Exit code: $rc"
-          echo "=== STDOUT ==="
-          cat /tmp/pram-stdout.txt
-          echo "=== STDERR ==="
-          cat /tmp/pram-stderr.txt
-          exit $rc
-        env:
-          PRAM_CATALOG_DIR: ${{ github.workspace }}
-          OPENCODE_CONFIG_DIR: ${{ github.workspace }}/.opencode
+          mkdir -p "$XDG_CONFIG_HOME/pram"
+          mkdir -p "$OPENCODE_CONFIG_DIR"
+          pram list --json
