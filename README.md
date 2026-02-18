@@ -3,7 +3,7 @@
 [![CI](https://github.com/provenimpact/proven-agents-manager-catalog/actions/workflows/ci.yaml/badge.svg)](https://github.com/provenimpact/proven-agents-manager-catalog/actions/workflows/ci.yaml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](LICENSE)
 
-Curated agent and skill definitions for [pram](https://github.com/provenimpact/proven-agents-manager). Pick a team, run `pram use <team>`, and the right agents and skills are deployed to your [OpenCode](https://github.com/opencode-ai/opencode) configuration.
+Curated agent and skill definitions for [pram](https://github.com/provenimpact/proven-agents-manager). Pick a team, run `pram use <team>`, and the right agents and skills are deployed to your [OpenCode](https://github.com/anomalyco/opencode) configuration.
 
 ## Teams
 
